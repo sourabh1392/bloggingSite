@@ -5,8 +5,9 @@ const createAuthor= async function(req,res){
     try{
     const data=req.body
     const email=data.emailId
-    const isemail=await authorModel.findOne({emailId:email})
-    if(!isemail) return res.status(400).send("Enter valid emailId")
+    const pattern=/@gmail.com$/
+    const validmail=email.match(pattern)
+    if(!validmail) return res.send("Enter Valid EmailId")
     const create=await authorModel.create(data)
     res.status(201).send({status:true,message:"Author Created",data:create})
     }
