@@ -1,4 +1,3 @@
-const { getMaxListeners } = require("process")
 const authorModel=require("../models/authorModel")
 
 const createAuthor= async function(req,res){
@@ -7,7 +6,7 @@ const createAuthor= async function(req,res){
     const email=data.emailId
     const pattern=/@gmail.com$/
     const validmail=email.match(pattern)
-    if(!validmail) return res.send("Enter Valid EmailId")
+    if(!validmail) return res.status(400).send("Enter Valid EmailId")
     const create=await authorModel.create(data)
     res.status(201).send({status:true,message:"Author Created",data:create})
     }
