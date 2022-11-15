@@ -37,8 +37,24 @@ const getBlog = async function (req, res) {
 
 }
 
+const putblogs= async function(req,res){
+    try{
+     let blogId= req.params.blogId
+     let {title ,body , subcategory, tags} = req.body 
+     if(!title && !body && !subcategory && !tags) 
+     return res.status(400).send("the documents needs to be updated is not present")
+     let blogdata= await blogModel.findByIdAndUpdate({_id: blogId}, {$set:title},{new : true})
+     res.status(200).send({msg : "the updated documents", data:blogdata})
+    }
+    catch(err){
+        res.status(500).send(err.message)
+    }
+}
+
+
 
 
 
 module.exports.createBlog = createBlog
 module.exports.getBlog = getBlog
+module.exports.putblogs=putblogs
