@@ -12,5 +12,7 @@ router.put("/blogs/:blogId" ,calmidd.blogIDexist, blog.putblogs)
 router.delete("/blogs/:blogId" ,calmidd.blogIDexist, blog.deleteblog)
 
 router.delete("/blogs" ,blog.deleteQueryBlog)
+router.get("/blogs",blog.getBlog)
+
 
 module.exports=router
