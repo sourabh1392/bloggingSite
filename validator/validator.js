@@ -13,8 +13,8 @@ const isEmpty = function (value) {
     if (typeof value === "string" && value.trim().length === 0) return false;
     return true;
 };
-const isValidEmail = function (email) {
+const isValidEmail = function (emailId) {
     const pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-    return pattern.test(email)
+    return pattern.test(emailId)
 }
 module.exports = { isEmpty, isValidName,isValidEmail,isValidPassword }

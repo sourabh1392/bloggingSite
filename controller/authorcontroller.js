@@ -7,7 +7,6 @@ const createAuthor= async function(req,res){
     const data=req.body
     if(Object.keys(data).length==0) return res.status(400).send("fields are Mandatory to Create")
     let {emailId,firstName,lastName,title,password} =data
-    if(!emailId||!firstName||!lastName||!title||!password) return res.status(400).send({status:false,msg:"All Fields are Mandetory"})
     if(!isEmpty(firstName)) return res.status(400).send({status: false , message : "Firstname Should Be Present"})
     if(!isEmpty(lastName)) return res.status(400).send({status: false , message : "LastName Should Be Present"})
     if(!isEmpty(emailId)) return res.status(400).send({status: false , message : "emailId Should Be Present"})

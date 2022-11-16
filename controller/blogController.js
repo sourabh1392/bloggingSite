@@ -3,13 +3,14 @@ const { isValidObjectId } = require('mongoose')
 const authorModel = require("../models/authorModel")
 const blogModel = require("../models/blogModel")
 const jwt = require('jsonwebtoken')
+const validation=require("../validator/validator")
+let{ isEmpty, isValidName } = validation
 
 const createBlog = async function (req, res) {
     try {
         const data = req.body
         let { title, body, authorId, category } = data
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "fields are Mandatory to Create Blogs" })
-        if (!body || !category || !authorId || !title) return res.status(400).send({ status: false, msg: "Some fields are missing" })
         if (!isEmpty(title)) return res.status(400).send({ status: false, message: "title Should Be Present" })
         if (!isEmpty(category)) return res.status(400).send({ status: false, message: "category Should Be Present" })
         if (!isEmpty(body)) return res.status(400).send({ status: false, message: "body Should Be Present" })
@@ -32,10 +33,10 @@ const login = async function (req, res) {
     try {
         const emailId = req.body.emailId
         const password = req.body.password
-        const check = await authorModel.findOne({ emailId: emailId }, { password: password })
+        const check = await authorModel.findOne({$and:[{ emailId: emailId ,  password: password }]})
         if (!check) return res.status(400).send({ status: false, message: "EmailId or Password Not found" })
         const create = jwt.sign({ emailId: emailId, password: password }, "pass123")
-        res.setHeaders('x-api-key', create)
+        res.setHeader('x-api-key', create)
         res.status(201).send({ status: true, message: "Token Created", data: create })
     }
     catch (err) {
@@ -88,12 +89,13 @@ const deleteblog = async function (req, res) {
     try {
         let blogId = req.params.blogId
         if (!isValidObjectId(blogId)) return res.status(400).send("Enter valid blogId")
-        let abc = await blogModel.find({ _id: blogId })
+        let abc = await blogModel.findById( blogId )
         if (!abc) return res.status(404).send({ status: false, message: "BlogId Not Found" })
         if (abc.isDeleted == true) {
             return res.status(404).send({ status: false, message: "blogId does not exist" })
         }
         let deleteData = await blogModel.findOneAndUpdate({ _id: blogId, isDeleted: false }, { $set: { isDeleted: true, deletedAt: new Date().toJSON() } }, { new: true })
+
         res.status(200).send()
     }
     catch (err) {
@@ -104,13 +106,14 @@ const deleteblog = async function (req, res) {
 
 const deleteQueryBlog = async function (req, res) {
     try {
-        const { category, authorId, tags, subcategory, isPublished } = req.query
-        if (!category && !authorId && !tags && !subcategory && !isPublished) {
+        const data= req.query
+        const { category, authorId, tags, subcategory} = data
+        if (!category && !authorId && !tags && !subcategory) {
             return res.status(404).send({ status: false, message: "no documents for deletion" })
         }
-        let data = await blogModel.find({ $or: [{ _id: authorId }, { category: category }, { tags: tags }, { subcategory: subcategory }], isDeleted: true })
-        if (data) return res.status(400).send({ status: false, message: "Document Already Deleted" })
-        let deletedata = await blogModel.updateMany({ $or: [{ _id: authorId }, { category: category }, { tags: tags }, { subcategory: subcategory }], isDeleted: false }, { $set: { isDeleted: true } }, { new: true })
+        let data1 = await blogModel.find({$and:[{ $or: [{ authorId: authorId }, { category: category }, { tags: tags }, { subcategory: subcategory }]},{ isDeleted: true }]})
+        if (data1.length>0) return res.status(400).send({ status: false, message: "Document Already Deleted" })
+        let deletedata = await blogModel.updateMany({ $or: [{ authorId: authorId }, { category: category }, { tags: tags }, { subcategory: subcategory }], isDeleted: false }, { $set: { isDeleted: true } }, { new: true })
         if (!deletedata) return res.status(404).send({ status: false, msg: "Document Not Deleted" })
         res.status(200).send({ status:true,msg: "Deleted Successful" })
     }
@@ -119,11 +122,14 @@ const deleteQueryBlog = async function (req, res) {
     }
 }
 
-
 module.exports.createBlog = createBlog
 module.exports.getBlog = getBlog
 module.exports.putblogs = putblogs
 module.exports.deleteblog = deleteblog
 module.exports.deleteQueryBlog = deleteQueryBlog
 module.exports.login = login
+
+
+
+
 
