@@ -5,14 +5,12 @@ const blog=require("../controller/blogController")
 const calmidd = require("../middlewares/middle")
 
 router.post("/authors",author.createAuthor)
-router.post("/blogs",blog.createBlog)
-router.get("/getblogs",blog.getBlog)
+router.post("/login",blog.login)
+router.post("/blogs",calmidd.authenticate,blog.createBlog)
+router.get("/blogs",calmidd.authenticate,blog.getBlog)
+router.put("/blogs/:blogId" ,calmidd.authenticate, blog.putblogs)
+router.delete("/blogs/:blogId",calmidd.authenticate,blog.deleteblog)
+router.delete("/blogs" ,calmidd.authenticate,blog.deleteQueryBlog)
 
-router.put("/blogs/:blogId" ,calmidd.blogIDexist, blog.putblogs)
-router.delete("/blogs/:blogId" ,calmidd.blogIDexist, blog.deleteblog)
-
-router.delete("/blogs" ,blog.deleteQueryBlog)
-router.get("/blogs",blog.getBlog)
-router.put("/blogs/:blogId",blog.putblogs)
 
 module.exports=router

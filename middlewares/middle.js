@@ -1,21 +1,36 @@
-const blogModel = require("../models/blogModel")
+const authorModel = require("../models/authorModel")
+const jwt=require('jsonwebtoken')
 
-const blogIDexist = async function(req,res,next)
-{ try{
-let blogId= req.params.blogId
-     let abc = await blogModel.find({_id: blogId})
-        if(abc.isDeleted== true){
-     return res.status(404).send({status : false , message: "blogId does not exist"})
+const authenticate=function(req,res,next){
+    try{
+        const header=req.headers["x-api-key"]
+        if(!header) return res.status(404).send({status:false,message:"Required Token Not Found"})
+        const verify=jwt.verify(header,"pass123")
+        if(verify){
+            req.verify=verify
+            next()
         }
-        req.blogId= blogId
-        next()
+        else return res.status(401).send("Not Authenticated")
     }
-        catch(err){
-            res.status(500).send(err.message)
-        }
-    
+    catch(err){
+        res.status(500).send(err.message)
     }
- 
+}
 
-  module.exports.blogIDexist=blogIDexist
-    
+const authorise=async function(req,res,next){
+    try{
+        let authorId=req.params.authorId
+        let user=await authorModel.findById(authorId)
+        if(!user) return res.status(400).send("User Not Found")
+        if(authorId==req.verify.authorId){
+            req.authorId=authorId
+            next()
+        }
+        else return res.status(403).send({status:true,message:"Not authorised User"})
+    }
+    catch(err){
+        return res.status(500).send({status:false,message:err.message})
+    }
+}
+module.exports.authenticate=authenticate
+module.exports.authorise=authorise
