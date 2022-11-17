@@ -2,6 +2,9 @@
 const validation=require("../validator/validator")
 const authorModel=require("../models/authorModel")
  let{ isEmpty, isValidName,isValidPassword } = validation
+ const jwt=require("jsonwebtoken")
+
+
 const createAuthor= async function(req,res){
     try{
     const data=req.body
@@ -13,7 +16,7 @@ const createAuthor= async function(req,res){
     if(!isEmpty(password)) return res.status(400).send({status: false , message : "password Should Be Present"})
     if(!isEmpty(title)) return res.status(400).send({status: false , message : "title Should Be Present"})
     else {
-        if(title!="Mr"&&title!="Mrs"&&title!="Miss")  return res.status(400).send({status: false , message : "title  Should Be Valid"})
+        if(title!="Mr"&&title!="Mrs"&&title!="Miss")  return res.status(400).send({status: false , message : "title Should Be Valid"})
     }
     if(!isValidName(firstName)) return res.status(400).send({status:false,message:"firstname is wrong"})
     if(!isValidName(lastName)) return res.status(400).send({status:false,message:"lastname is wrong"})
@@ -29,7 +32,23 @@ const createAuthor= async function(req,res){
     catch(err){
     res.status(500).send(err.message)
     }
-}   
+} 
+
+const login = async function (req, res) {
+    try {
+        const emailId = req.body.emailId
+        const password = req.body.password
+        const check = await authorModel.findOne({$and:[{ emailId: emailId ,  password: password }]})
+        if (!check) return res.status(400).send({ status: false, message: "EmailId or Password Not found" })
+        const create = jwt.sign({ authorId: check._id.toString(), password: password }, "pass123")
+        res.setHeader('x-api-key', create)
+        res.status(201).send({ status: true, message: "Token Created", data: create })
+    }
+    catch (err) {
+        res.status(500).send(err.message)
+    }
+}
 
 module.exports.createAuthor=createAuthor
+module.exports.login = login
 
