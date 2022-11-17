@@ -9,7 +9,7 @@ router.post("/login",blog.login)
 router.post("/blogs",calmidd.authenticate,blog.createBlog)
 router.get("/blogs",calmidd.authenticate,blog.getBlog)
 router.put("/blogs/:blogId" ,calmidd.authenticate, blog.putblogs)
-router.delete("/blogs/:blogId",calmidd.authenticate,blog.deleteblog)
+router.delete("/blogs/:blogId",calmidd.authenticate, blog.deleteblog)
 router.delete("/blogs" ,calmidd.authenticate,blog.deleteQueryBlog)
 
 

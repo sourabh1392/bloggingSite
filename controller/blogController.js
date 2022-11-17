@@ -6,6 +6,22 @@ const jwt = require('jsonwebtoken')
 const validation=require("../validator/validator")
 let{ isEmpty, isValidName } = validation
 
+
+const login = async function (req, res) {
+    try {
+        const emailId = req.body.emailId
+        const password = req.body.password
+        const check = await authorModel.findOne({$and:[{ emailId: emailId ,  password: password }]})
+        if (!check) return res.status(400).send({ status: false, message: "EmailId or Password Not found" })
+        const create = jwt.sign({ authorId: check._id.toString(), password: password }, "pass123")
+        res.setHeader('x-api-key', create)
+        res.status(201).send({ status: true, message: "Token Created", data: create })
+    }
+    catch (err) {
+        res.status(500).send(err.message)
+    }
+}
+
 const createBlog = async function (req, res) {
     try {
         const data = req.body
@@ -29,20 +45,6 @@ const createBlog = async function (req, res) {
     }
 }
 
-const login = async function (req, res) {
-    try {
-        const emailId = req.body.emailId
-        const password = req.body.password
-        const check = await authorModel.findOne({$and:[{ emailId: emailId ,  password: password }]})
-        if (!check) return res.status(400).send({ status: false, message: "EmailId or Password Not found" })
-        const create = jwt.sign({ emailId: emailId, password: password }, "pass123")
-        res.setHeader('x-api-key', create)
-        res.status(201).send({ status: true, message: "Token Created", data: create })
-    }
-    catch (err) {
-        res.status(500).send(err.message)
-    }
-}
 
 const getBlog = async function (req, res) {
     try {
@@ -66,8 +68,12 @@ const putblogs = async function (req, res) {
     try {
         let blogId = req.params.blogId
         if (!isValidObjectId(blogId)) return res.status(400).send("Enter valid blogId")
-        let abc = await blogModel.find({ _id: blogId })
+        let abc = await blogModel.findById(blogId)
+        console.log(abc.authorId)
         if (!abc) return res.status(404).send({ status: false, message: "BlogId Not Found" })
+        if(abc.authorId!=req.verify.authorId){
+            return res.status(403).send({status:false,msg:"User Not Authorised"})
+        }
         if (abc.isDeleted == true) {
             return res.status(404).send({ status: false, message: "blog does not exist" })
         }
@@ -91,6 +97,9 @@ const deleteblog = async function (req, res) {
         if (!isValidObjectId(blogId)) return res.status(400).send("Enter valid blogId")
         let abc = await blogModel.findById( blogId )
         if (!abc) return res.status(404).send({ status: false, message: "BlogId Not Found" })
+        if(abc.authorId!=req.verify.authorId){
+            return res.status(403).send({status:false,msg:"User Not Authorised"})
+        }
         if (abc.isDeleted == true) {
             return res.status(404).send({ status: false, message: "blogId does not exist" })
         }
