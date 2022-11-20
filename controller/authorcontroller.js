@@ -9,10 +9,10 @@ const createAuthor = async function (req, res) {
         const data = req.body
         if (Object.keys(data).length == 0)
             return res.status(400).send("fields are Mandatory to Create")
-        let { emailId, firstName, lastName, title, password } = data
-        if (!isEmpty(firstName))
+        let { emailId, fname, lname, title, password } = data
+        if (!isEmpty(fname))
             return res.status(400).send({ status: false, message: "fname is required" })
-        if (!isEmpty(lastName))
+        if (!isEmpty(lname))
             return res.status(400).send({ status: false, message: "lname is required" })
         if (!isEmpty(emailId))
             return res.status(400).send({ status: false, message: "emailId is required" })
@@ -23,9 +23,9 @@ const createAuthor = async function (req, res) {
         else {
             if (title != "Mr" && title != "Mrs" && title != "Miss") return res.status(400).send({ status: false, message: "Enter Mr, Mrs, Miss as a title" })
         }
-        if (!isValidName(firstName))
+        if (!isValidName(fname))
             return res.status(400).send({ status: false, message: "Enter valid fname" })
-        if (!isValidName(lastName))
+        if (!isValidName(lname))
             return res.status(400).send({ status: false, message: "Enter valid lname" })
         if (!isValidPassword(password))
             return res.status(400).send({ status: false, message: "Password Should contain min 1 uppercase , lowercase and one special character" })
