@@ -1,9 +1,8 @@
-
 const { isValidObjectId } = require('mongoose')
 const authorModel = require("../models/authorModel")
 const blogModel = require("../models/blogModel")
 const validation = require("../validator/validator")
-let { isEmpty, isValidName } = validation
+let { isEmpty } = validation
 
 const createBlog = async function (req, res) {
     try {
@@ -19,11 +18,7 @@ const createBlog = async function (req, res) {
         if (!isEmpty(authorId))
             return res.status(400).send({ status: false, message: "authorId Should Be Present" })
 
-        if (!isValidName(title))
-            return res.status(400).send({ status: false, message: "Enter valid title" })
-        if (!isValidName(category))
-            return res.status(400).send({ status: false, message: "Enter valid category " }) 
-
+        
         const validId = await authorModel.findOne({ _id: data.authorId })
         if (!validId)
             return res.status(400).send("You are not authorised")

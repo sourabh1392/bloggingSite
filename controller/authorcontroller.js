@@ -1,4 +1,3 @@
-
 const validation = require("../validator/validator")
 const authorModel = require("../models/authorModel")
 let { isEmpty, isValidName, isValidPassword } = validation
