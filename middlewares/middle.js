@@ -1,6 +1,4 @@
-const authorModel = require("../models/authorModel")
 const jwt = require('jsonwebtoken')
-const blogModel = require("../models/blogModel")
 
 const authenticate = function (req, res, next) {
     try {

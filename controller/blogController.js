@@ -18,7 +18,6 @@ const createBlog = async function (req, res) {
         if (!isEmpty(authorId))
             return res.status(400).send({ status: false, message: "authorId Should Be Present" })
 
-        
         const validId = await authorModel.findOne({ _id: data.authorId })
         if (!validId)
             return res.status(400).send("You are not authorised")
@@ -45,7 +44,7 @@ const getBlog = async function (req, res) {
         const getblogs = getdata.filter(a => a.isDeleted == false && a.isPublished == true)
         if (!getblogs)
             return res.status(404).send({ status: false, message: "Invalid Query" })
-        return res.status(200).send({ status: true, message: "Blogs", data: getblogs })
+        return res.status(200).send({ status: true, message: "Blogs", data: getblogs})
     }
     catch (err) {
         res.status(500).send({status:false,message:err.message})
@@ -83,7 +82,7 @@ const deleteblog = async function (req, res) {
     try {
         let blogId = req.params.blogId
         if (!isValidObjectId(blogId))
-            return res.status(400).send("Enter valid blogId")
+            return res.status(400).send({status:false,message:"Enter valid blogId"})
         let blog = await blogModel.findById(blogId)
         if (!blog)
             return res.status(404).send({ status: false, message: "Blog does not exist" })
@@ -123,6 +122,7 @@ const deleteQueryBlog = async function (req, res) {
         return res.status(500).send({ status: false, message: err.message });
     }
 }
+
 
 module.exports.createBlog = createBlog
 module.exports.getBlog = getBlog

@@ -33,4 +33,5 @@ const blogSchema = mongoose.Schema({
     deletedAt:String
 }, { timestamps: true })
 
+
 module.exports = mongoose.model('Blogs', blogSchema)

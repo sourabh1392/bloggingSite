@@ -7,7 +7,7 @@ const createAuthor = async function (req, res) {
     try {
         const data = req.body
         if (Object.keys(data).length == 0)
-            return res.status(400).send("fields are Mandatory to Create")
+            return res.status(400).send({status:true,message:"fields are Mandatory to Create"})
         let { emailId, fname, lname, title, password } = data
         if (!isEmpty(fname))
             return res.status(400).send({ status: false, message: "fname is required" })
@@ -59,5 +59,6 @@ const login = async function (req, res) {
 }
 
 module.exports.createAuthor = createAuthor
+
 module.exports.login = login
 
