@@ -17,6 +17,7 @@
     "url": "https://github.com/sourabh1392/miniBloggingSite/issues"
   },
   "homepage": "https://github.com/sourabh1392/miniBloggingSite#readme",
+  
   "dependencies": {
     "body-parser": "^1.20.1",
     "cores": "^0.8.5",

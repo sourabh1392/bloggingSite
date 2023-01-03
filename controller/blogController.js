@@ -133,7 +133,6 @@ const deleteQueryBlog = async function (req, res) {
     }
 }
 
-
 module.exports = {createBlog ,getBlog,putblogs,deleteblog,deleteQueryBlog}
 
 

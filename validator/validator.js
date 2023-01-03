@@ -19,4 +19,5 @@ const isEmpty = function (value) {
     return true;
 };
 
+
 module.exports = { isEmpty, isValidName,isValidPassword }
