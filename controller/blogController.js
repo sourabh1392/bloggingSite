@@ -4,6 +4,8 @@ const blogModel = require("../models/blogModel")
 const validation = require("../validator/validator")
 let { isEmpty } = validation
 
+
+//=================  Create Blog =====================
 const createBlog = async function (req, res) {
     try {
         const data = req.body
@@ -31,6 +33,8 @@ const createBlog = async function (req, res) {
     }
 }
 
+
+//=================== Get Blog By Query =========================
 const getBlog = async function (req, res) {
     try {
         const { authorId, category, tags, subcategory } = req.query
@@ -51,6 +55,8 @@ const getBlog = async function (req, res) {
     }
 }
 
+
+//============= Update Blogs =================
 const putblogs = async function (req, res) {
     try {
         let blogId = req.params.blogId
@@ -78,6 +84,8 @@ const putblogs = async function (req, res) {
     }
 }
 
+
+//=================== Delete Blogs =====================
 const deleteblog = async function (req, res) {
     try {
         let blogId = req.params.blogId
@@ -100,6 +108,8 @@ const deleteblog = async function (req, res) {
     }
 }
 
+
+//================= Delete Blogs By Query ============================
 const deleteQueryBlog = async function (req, res) {
     try {
         const reqQuery = req.query;
@@ -124,11 +134,7 @@ const deleteQueryBlog = async function (req, res) {
 }
 
 
-module.exports.createBlog = createBlog
-module.exports.getBlog = getBlog
-module.exports.putblogs = putblogs
-module.exports.deleteblog = deleteblog
-module.exports.deleteQueryBlog = deleteQueryBlog
+module.exports = {createBlog ,getBlog,putblogs,deleteblog,deleteQueryBlog}
 
 
 

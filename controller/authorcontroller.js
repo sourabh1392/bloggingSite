@@ -3,6 +3,8 @@ const authorModel = require("../models/authorModel")
 let { isEmpty, isValidName, isValidPassword } = validation
 const jwt = require("jsonwebtoken")
 
+
+//================ Create Author =================
 const createAuthor = async function (req, res) {
     try {
         const data = req.body
@@ -43,6 +45,8 @@ const createAuthor = async function (req, res) {
     }
 }
 
+
+//==================== Author Login ==================
 const login = async function (req, res) {
     try {
         const emailId = req.body.emailId
@@ -58,7 +62,5 @@ const login = async function (req, res) {
     }
 }
 
-module.exports.createAuthor = createAuthor
-
-module.exports.login = login
+module.exports = {createAuthor,login}
 

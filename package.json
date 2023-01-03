@@ -1,4 +1,22 @@
 {
+  "name": "blogproject",
+  "version": "1.0.0",
+  "description": "Mini Blogging Site",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sourabh1392/miniBloggingSite.git"
+  },
+  "author": "Sourabh Patil, Prageet Sharma, Garima Sachan, Babita Pradhan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sourabh1392/miniBloggingSite/issues"
+  },
+  "homepage": "https://github.com/sourabh1392/miniBloggingSite#readme",
   "dependencies": {
     "body-parser": "^1.20.1",
     "cores": "^0.8.5",
